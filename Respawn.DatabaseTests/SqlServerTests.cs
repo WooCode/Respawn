@@ -53,7 +53,7 @@ namespace Respawn.DatabaseTests
             using (var connection = new SqlConnection(connString))
             {
                 await connection.OpenAsync();
-                using (var database = new Database(connString, DatabaseType.SqlServer2012, SqlClientFactory.Instance))
+                using (var database = new Database(connection))
                 {
                     await database.ExecuteAsync(@"IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'SqlServerTests') alter database SqlServerTests set single_user with rollback immediate");
                     await database.ExecuteAsync(@"DROP DATABASE IF EXISTS SqlServerTests");
@@ -66,7 +66,7 @@ namespace Respawn.DatabaseTests
             _connection = new SqlConnection(connString);
             _connection.Open();
 
-            _database = new Database(connString, DatabaseType.SqlServer2012, SqlClientFactory.Instance);
+            _database = new Database(_connection);
         }
 
         public Task DisposeAsync()
